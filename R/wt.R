@@ -2,7 +2,7 @@ wt <-
 function(x, start = 1, dt = 1, dj = 1/20, 
          lowerPeriod = 2*dt, upperPeriod = floor(length(x)*dt/3),
          make.pval = TRUE, method = "white.noise", params = NULL, 
-         n.sim = 100, save.sim = FALSE) {
+         n.sim = 100, save.sim = FALSE, verbose = F) {
  
                                  
   ###############################################################################
@@ -43,7 +43,8 @@ function(x, start = 1, dt = 1, dj = 1/20,
       
       if (save.sim == T) { series.sim = matrix(NA, nrow=nc, ncol=n.sim) }
        
-      pb = txtProgressBar(min = 0, max = n.sim, style = 3) # create a progress bar
+      if(verbose)     
+         pb = txtProgressBar(min = 0, max = n.sim, style = 3) # create a progress bar
       for(ind.sim in 1:n.sim){
       
           x.sim = SurrogateData(x, method = method)
@@ -60,9 +61,11 @@ function(x, start = 1, dt = 1, dj = 1/20,
           
           Power.pval[Power.sim >= Power] = Power.pval[Power.sim >= Power] + 1
           Power.avg.pval[Power.avg.sim >= Power.avg] = Power.avg.pval[Power.avg.sim >= Power.avg] + 1
-          setTxtProgressBar(pb, ind.sim) # set progress bar
+          if(verbose)     
+                  setTxtProgressBar(pb, ind.sim) # set progress bar
       }
-      close(pb) # close progress bar
+      if(verbose)
+         close(pb) # close progress bar
 
       # p-values
       
